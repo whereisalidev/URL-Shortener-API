@@ -4,29 +4,35 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.shortcuts import redirect, get_object_or_404
+from django.core.validators import URLValidator
 
 
 class UrlShortenerAPI(APIView):
     def post(self, request):
-        original_url = request.data.get('original_url')
+        try:
+            original_url = request.data.get('original_url') or request.Meta.get('original_url')
+            
+            if not original_url:
+                return Response({'message': 'original_url is required'}, status=status.HTTP_400_BAD_REQUEST)    
 
-        if not original_url:
-            return Response({'message': 'original_url is required'}, status=status.HTTP_400_BAD_REQUEST)
+            validator = URLValidator()
+            try:
+                validator(original_url)
+            except:
+                return Response({'success': False, 'message': 'Invalid URL'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if original_url is None:
-            return Response({'message': 'original_url is required'}, status=status.HTTP_400_BAD_REQUEST)
+            url_instance = UrlShortenerModel.objects.filter(original_url=original_url).first()
 
-        if UrlShortenerModel.objects.filter(original_url=original_url).exists():
-            url = UrlShortenerModel.objects.get(original_url=original_url)
-            return Response({'message': f'http://127.0.0.1:8000/{url.short_url}'}, status=status.HTTP_201_CREATED)
-        
-        short_url = generate_short_url(original_url)
-        print('yes')
+            if url_instance:
+                return Response({'message': f'https://sit.up.railway.app/{url_instance.short_url}'}, status=status.HTTP_201_CREATED)
+            
+            short_url = generate_short_url(original_url)
 
-        UrlShortenerModel.objects.create(original_url=original_url, short_url=short_url)
+            UrlShortenerModel.objects.create(original_url=original_url, short_url=short_url)
 
-
-        return Response({'message': f'https://sit.up.railway.app/{short_url}'}, status=status.HTTP_201_CREATED)
+            return Response({'message': f'https://sit.up.railway.app/{short_url}'}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 
