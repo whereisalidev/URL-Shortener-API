@@ -1,6 +1,7 @@
 from django.urls import path
-from . views import API
+from . views import UrlShortenerAPI, RedirectAPI
 
 urlpatterns = [
-    path('shorten', API.as_view())
+    path('api/shorten', UrlShortenerAPI.as_view()),
+    path('<str:short_url>', RedirectAPI.as_view())
 ]
