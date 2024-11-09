@@ -10,7 +10,7 @@ from django.core.validators import URLValidator
 class UrlShortenerAPI(APIView):
     def post(self, request):
         try:
-            original_url = request.data.get('original_url') or request.Meta.get('original_url')
+            original_url = request.data.get('original_url')
             
             if not original_url:
                 return Response({'message': 'original_url is required'}, status=status.HTTP_400_BAD_REQUEST)    
