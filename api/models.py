@@ -5,3 +5,7 @@ class UrlShortenerModel(models.Model):
     original_url = models.TextField()
     short_url = models.CharField(max_length=30, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.short_url} -> {self.original_url}"
+    
