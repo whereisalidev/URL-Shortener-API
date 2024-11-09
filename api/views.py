@@ -19,7 +19,7 @@ class UrlShortenerAPI(APIView):
             try:
                 validator(original_url)
             except:
-                return Response({'success': False, 'message': 'Invalid URL'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'message': 'Invalid URL'}, status=status.HTTP_400_BAD_REQUEST)
 
             url_instance = UrlShortenerModel.objects.filter(original_url=original_url).first()
 
