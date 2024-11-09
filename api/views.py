@@ -13,6 +13,9 @@ class UrlShortenerAPI(APIView):
         if not original_url:
             return Response({'message': 'original_url is required'}, status=status.HTTP_400_BAD_REQUEST)
 
+        if original_url is None:
+            return Response({'message': 'original_url is required'}, status=status.HTTP_400_BAD_REQUEST)
+
         if UrlShortenerModel.objects.filter(original_url=original_url).exists():
             url = UrlShortenerModel.objects.get(original_url=original_url)
             return Response({'message': f'http://127.0.0.1:8000/{url.short_url}'}, status=status.HTTP_201_CREATED)
