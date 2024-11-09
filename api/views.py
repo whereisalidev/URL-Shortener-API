@@ -23,7 +23,7 @@ class UrlShortenerAPI(APIView):
         UrlShortenerModel.objects.create(original_url=original_url, short_url=short_url)
 
 
-        return Response({'message': f'http://127.0.0.1:8000/{short_url}'}, status=status.HTTP_201_CREATED)
+        return Response({'message': f'https://sit.up.railway.app/{short_url}'}, status=status.HTTP_201_CREATED)
 
 
 
