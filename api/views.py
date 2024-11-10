@@ -44,7 +44,7 @@ class RedirectAPI(APIView):
         except UrlShortenerModel.MultipleObjectsReturned:
             return Response({'message': 'Multiple entries found for this short URL'}, status=status.HTTP_400_BAD_REQUEST)
         except UrlShortenerModel.DoesNotExist:
-            return Response({'message': 'Short Url not found'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'message': 'Short url not found'}, status=status.HTTP_404_NOT_FOUND)
         return redirect(url.original_url)
         
 
